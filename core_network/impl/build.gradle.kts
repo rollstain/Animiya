@@ -14,6 +14,8 @@ kotlin {
         }
     }
 
+    jvm()
+
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -34,6 +36,9 @@ kotlin {
             implementation(libs.koin.core)
         }
         androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+        }
+        jvmMain.dependencies {
             implementation(libs.ktor.client.okhttp)
         }
         iosMain.dependencies {

@@ -26,3 +26,10 @@ include(":core_network:impl")
 // data
 include(":data_anime:api")
 include(":data_anime:impl")
+
+// feature
+include(":feature_catalog")
+
+// app
+include(":composeApp")
+include(":androidApp")

@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
-    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
     android {
-        namespace = "com.issildur.animiya.data.anime.impl"
+        namespace = "com.issildur.animiya.feature.catalog"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         compilerOptions {
@@ -14,29 +15,25 @@ kotlin {
         }
     }
 
-    jvm()
-
     iosX64()
     iosArm64()
     iosSimulatorArm64()
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.dataAnime.api)
             implementation(projects.coreUtils)
-            implementation(projects.coreNetwork.api)
-            implementation(projects.coreNetwork.impl)
+            implementation(projects.dataAnime.api)
+
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.components.resources)
 
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
             implementation(libs.koin.core)
-        }
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-            implementation(libs.ktor.client.mock)
-            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.koin.compose)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
         }
     }
 }

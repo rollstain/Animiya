@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Тема-заглушка: всё оформление живёт в Compose (MaterialTheme),
+         системной теме достаточно не рисовать ActionBar. -->
+    <style name="Theme.Animiya" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
