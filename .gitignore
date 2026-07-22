@@ -1,0 +1,36 @@
+*.iml
+.gradle
+/local.properties
+local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deploymentTargetDropDown.xml
+/.idea/appInsightsSettings.xml
+.DS_Store
+build/
+/captures
+.externalNativeBuild
+.cxx
+.kotlin
+
+# KMP / native
+*.hprof
+kotlin-js-store/
+
+# iOS
+iosApp/build/
+iosApp/Pods/
+iosApp/*.xcworkspace/xcuserdata/
+iosApp/**/xcuserdata/
+*.xcuserstate
+
+# Secrets — никогда не коммитить
+*.jks
+*.keystore
+env.properties
+secrets.properties
