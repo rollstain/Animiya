@@ -16,5 +16,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "Animiya"
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 // core
 include(":core_utils")
+include(":core_network:api")
+include(":core_network:impl")
