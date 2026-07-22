@@ -1,5 +1,11 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Корневой build-файл. Плагины объявляются здесь без применения,
+// применяются в модулях.
 plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.kotlinSerialization) apply false
+    alias(libs.plugins.composeCompiler) apply false
+    alias(libs.plugins.composeMultiplatform) apply false
+    alias(libs.plugins.sqldelight) apply false
 }
