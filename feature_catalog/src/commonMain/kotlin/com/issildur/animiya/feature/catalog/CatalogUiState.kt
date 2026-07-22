@@ -13,6 +13,8 @@ import com.issildur.animiya.data.anime.api.model.ReleaseId
 @Immutable
 data class ReleaseUiModel(
     val id: ReleaseId,
+    /** Что передавать в запрос деталей: alias, если он есть, иначе числовой id. */
+    val idOrAlias: String,
     val title: String,
     /** «2026 · Лето · ТВ» — собирается заранее, null-поля пропускаются. */
     val subtitle: String,

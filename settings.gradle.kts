@@ -29,6 +29,7 @@ include(":data_anime:impl")
 
 // feature
 include(":feature_catalog")
+include(":feature_release")
 
 // app
 include(":composeApp")

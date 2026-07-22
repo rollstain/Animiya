@@ -1,6 +1,7 @@
 package com.issildur.animiya.feature.catalog
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,7 @@ fun CatalogView(
     state: CatalogUiState,
     onRetry: () -> Unit,
     onLoadMore: () -> Unit,
+    onReleaseClick: (ReleaseUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(modifier = modifier.fillMaxSize()) {
@@ -68,6 +70,7 @@ fun CatalogView(
                 appendError = state.appendError,
                 onLoadMore = onLoadMore,
                 onRetryAppend = onLoadMore,
+                onReleaseClick = onReleaseClick,
             )
         }
     }
@@ -80,6 +83,7 @@ private fun ReleaseGrid(
     appendError: AppError?,
     onLoadMore: () -> Unit,
     onRetryAppend: () -> Unit,
+    onReleaseClick: (ReleaseUiModel) -> Unit,
 ) {
     val gridState = rememberLazyGridState()
     PaginationEffect(gridState = gridState, itemCount = releases.size, onLoadMore = onLoadMore)
@@ -96,7 +100,7 @@ private fun ReleaseGrid(
             modifier = Modifier.weight(1f).fillMaxWidth(),
         ) {
             items(items = releases, key = { it.id.raw }) { release ->
-                ReleaseCard(release = release)
+                ReleaseCard(release = release, onClick = { onReleaseClick(release) })
             }
         }
 
@@ -138,8 +142,14 @@ private fun PaginationEffect(
 }
 
 @Composable
-private fun ReleaseCard(release: ReleaseUiModel) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+private fun ReleaseCard(release: ReleaseUiModel, onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            // Скругление на clickable, чтобы ripple не выходил за карточку.
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick),
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

@@ -3,6 +3,7 @@ package com.issildur.animiya.data.anime.impl.di
 import com.issildur.animiya.data.anime.api.AnimeRemoteDataSource
 import com.issildur.animiya.data.anime.api.AnimeRepository
 import com.issildur.animiya.data.anime.api.usecase.GetReleaseCatalogUseCase
+import com.issildur.animiya.data.anime.api.usecase.GetReleaseUseCase
 import com.issildur.animiya.data.anime.impl.AnilibriaRemoteDataSource
 import com.issildur.animiya.data.anime.impl.AnimeRepositoryImpl
 import com.issildur.animiya.data.anime.impl.mapper.ImageUrlResolver
@@ -32,4 +33,5 @@ val dataAnimeModule = module {
     single<AnimeRepository> { AnimeRepositoryImpl(remote = get()) }
 
     factory { GetReleaseCatalogUseCase(repository = get()) }
+    factory { GetReleaseUseCase(repository = get()) }
 }

@@ -14,17 +14,33 @@ value class ReleaseId(val raw: Int)
 /**
  * Набор вариантов изображения.
  * URL здесь уже АБСОЛЮТНЫЕ — склейка с mediaBaseUrl происходит в мапперах.
+ *
+ * ВНИМАНИЕ по размерам (замерено на реальном постере):
+ *   optimized.thumbnail — 258 байт
+ *   thumbnail (jpg)     — 842 байта
+ *   preview / src       — 55 КБ (webp) и 76 КБ (jpg), это один и тот же файл
+ *
+ * То есть [thumbnail] — НЕ уменьшенный постер, а микро-заглушка в несколько
+ * пикселей, пригодная только под blur-плейсхолдер. Показывать её в сетке
+ * нельзя: картинка выглядит «мыльной».
  */
 data class ImageSet(
     val thumbnail: String? = null,
     val preview: String? = null,
     val full: String? = null,
 ) {
-    /** Наиболее подходящий доступный вариант, от мелкого к крупному. */
+    /** Полноразмерный вариант. */
     fun best(): String? = full ?: preview ?: thumbnail
 
-    /** Вариант для сетки каталога. */
-    fun forGrid(): String? = thumbnail ?: preview ?: full
+    /**
+     * Вариант для сетки каталога — тоже полноразмерный.
+     * WebP из optimized уже даёт экономию ~28% против JPEG, а [thumbnail]
+     * для отображения непригоден (см. описание класса).
+     */
+    fun forGrid(): String? = preview ?: full ?: thumbnail
+
+    /** Микро-заглушка на время загрузки настоящего постера. */
+    fun blurPlaceholder(): String? = thumbnail
 
     companion object {
         val Empty = ImageSet()

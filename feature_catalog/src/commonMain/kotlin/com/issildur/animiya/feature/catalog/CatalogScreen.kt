@@ -17,19 +17,23 @@ import org.koin.compose.koinInject
  * [CatalogComponent].
  */
 @Composable
-fun CatalogScreen(modifier: Modifier = Modifier) {
+fun CatalogScreen(
+    onReleaseClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val getCatalog: GetReleaseCatalogUseCase = koinInject()
     val scope = rememberCoroutineScope()
     val component = remember(scope) {
         DefaultCatalogComponent(scope = scope, getCatalog = getCatalog)
     }
 
-    CatalogScreen(component = component, modifier = modifier)
+    CatalogScreen(component = component, onReleaseClick = onReleaseClick, modifier = modifier)
 }
 
 @Composable
 fun CatalogScreen(
     component: CatalogComponent,
+    onReleaseClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by component.state.collectAsState()
@@ -38,6 +42,7 @@ fun CatalogScreen(
         state = state,
         onRetry = component::onRetry,
         onLoadMore = component::onLoadMore,
+        onReleaseClick = { onReleaseClick(it.idOrAlias) },
         modifier = modifier,
     )
 }

@@ -7,7 +7,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.issildur.animiya.composeapp"
+        namespace = "com.issildur.animiya.feature.release"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         compilerOptions {
@@ -15,42 +15,25 @@ kotlin {
         }
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
+    jvm()
+
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.androidx.activity.compose)
-        }
         commonMain.dependencies {
             implementation(projects.coreUtils)
-            implementation(projects.coreNetwork.api)
-            implementation(projects.coreNetwork.impl)
             implementation(projects.dataAnime.api)
-            implementation(projects.dataAnime.impl)
-            implementation(projects.featureCatalog)
-            implementation(projects.featureRelease)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.logging)
             implementation(libs.coil.compose)
-            implementation(libs.coil.network.ktor)
         }
     }
 }

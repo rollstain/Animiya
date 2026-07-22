@@ -102,6 +102,7 @@ class DefaultCatalogComponent(
 
 private fun Release.toUiModel(): ReleaseUiModel = ReleaseUiModel(
     id = id,
+    idOrAlias = alias ?: id.raw.toString(),
     title = title,
     subtitle = listOfNotNull(
         year?.toString(),
