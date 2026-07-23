@@ -48,6 +48,7 @@ class ReleaseMapper(
         genres = dto.genres.mapNotNull { it.toDomainOrNull() },
         description = dto.description?.takeIf { it.isNotBlank() },
         publishWeekday = dto.publishDay?.value?.takeIf { it in 1..7 },
+        inListsCount = dto.addedInUsersFavorites?.takeIf { it > 0 },
     )
 
     /** Битые элементы отбрасываются, а не роняют всю страницу. */

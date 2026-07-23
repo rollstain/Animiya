@@ -36,6 +36,7 @@ data class ReleaseDto(
     @SerialName("average_duration_of_episode") val averageDurationOfEpisode: Int? = null,
     @SerialName("age_rating") val ageRating: AgeRatingDto? = null,
     @SerialName("publish_day") val publishDay: IntValueDescriptionDto? = null,
+    @SerialName("added_in_users_favorites") val addedInUsersFavorites: Int? = null,
     @SerialName("genres") val genres: List<GenreDto> = emptyList(),
     @SerialName("episodes") val episodes: List<EpisodeDto> = emptyList(),
     @SerialName("fresh_at") val freshAt: String? = null,

@@ -82,6 +82,8 @@ data class Release(
     val description: String?,
     /** 1 — понедельник, 7 — воскресенье. В v1 нумерация с единицы, в старом v3 была с нуля. */
     val publishWeekday: Int?,
+    /** Сколько пользователей добавили релиз в избранное — соц-доказательство на карточке. */
+    val inListsCount: Int?,
 ) {
     val isBlocked: Boolean get() = availability != Availability.AVAILABLE
 }
