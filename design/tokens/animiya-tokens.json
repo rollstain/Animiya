@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "name": "Animiya Design Tokens",
+    "theme": "dark",
+    "grid": "4dp",
+    "poster": { "ratio": "2:3", "scale": "crop" }
+  },
+  "font": {
+    "display": "Unbounded",
+    "body": "Onest",
+    "weights": { "unbounded": [400, 500, 600, 700, 800], "onest": [400, 500, 600, 700] }
+  },
+  "color": {
+    "appBackdrop": "#0F0D13",
+    "background": "#141218",
+    "surfaceContainerLow": "#1D1B20",
+    "surfaceContainer": "#211F26",
+    "surfaceContainerHigh": "#2B2930",
+    "surfaceContainerHighest": "#36343B",
+    "outline": "#48454E",
+    "primary": "#7C5CFF",
+    "primaryContainer": "#D0BCFF",
+    "onSurface": "#E6E0E9",
+    "onSurfaceVariant": "#CAC4D0",
+    "onSurfaceMuted": "#928E99",
+    "success": "#4ADE80",
+    "error": "#F2564D"
+  },
+  "elevation": {
+    "formula": "alpha = min(1, (4.5*ln(1+dp)+2)/100)",
+    "levels": { "0": "#141218", "1": "#1D1B20", "3": "#211F26", "6": "#2B2930", "12": "#36343B" }
+  },
+  "typeScale": {
+    "display": [57, 45, 36],
+    "headline": [32, 28, 24],
+    "title": [22, 16, 14],
+    "body": [16, 14, 12],
+    "label": [14, 12, 11]
+  },
+  "spacing": [4, 8, 12, 16, 24, 32, 40, 48],
+  "layout": { "screenPadding": 16, "gridGutter": 12 },
+  "radius": {
+    "scale": [0, 4, 8, 12, 16, 20, 28, 32],
+    "chip": 8,
+    "card": 12,
+    "sheetTop": 24,
+    "pill": "full"
+  },
+  "motion": {
+    "durationMs": { "short": [50, 200], "medium": [250, 400], "long": [450, 600] },
+    "easing": { "standard": [0.2, 0, 0, 1], "emphasizedDecelerate": [0.2, 0, 0, 1] }
+  }
+}

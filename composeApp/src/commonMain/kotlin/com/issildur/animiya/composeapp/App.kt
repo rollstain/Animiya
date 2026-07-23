@@ -1,18 +1,14 @@
 package com.issildur.animiya.composeapp
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +23,7 @@ import coil3.request.crossfade
 import com.issildur.animiya.data.anime.impl.di.ImageHttpClient
 import com.issildur.animiya.feature.catalog.CatalogScreen
 import com.issildur.animiya.feature.release.ReleaseDetailsScreen
+import com.issildur.animiya.uikit.theme.AnimiyaTheme
 import io.ktor.client.HttpClient
 import org.koin.compose.getKoin
 
@@ -89,12 +86,4 @@ fun App() {
             }
         }
     }
-}
-
-@Composable
-fun AnimiyaTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme(),
-        content = content,
-    )
 }

@@ -27,6 +27,9 @@ include(":core_network:impl")
 include(":data_anime:api")
 include(":data_anime:impl")
 
+// ui
+include(":uikit")
+
 // feature
 include(":feature_catalog")
 include(":feature_release")

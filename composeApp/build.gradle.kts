@@ -36,6 +36,7 @@ kotlin {
             implementation(projects.coreNetwork.impl)
             implementation(projects.dataAnime.api)
             implementation(projects.dataAnime.impl)
+            implementation(projects.uikit)
             implementation(projects.featureCatalog)
             implementation(projects.featureRelease)
 
