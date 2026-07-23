@@ -22,6 +22,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.coreUtils)
+            implementation(projects.coreUi)
+            implementation(projects.uikit)
             implementation(projects.dataAnime.api)
 
             implementation(compose.runtime)

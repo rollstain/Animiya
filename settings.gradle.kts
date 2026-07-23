@@ -29,6 +29,7 @@ include(":data_anime:impl")
 
 // ui
 include(":uikit")
+include(":core_ui")
 
 // feature
 include(":feature_catalog")

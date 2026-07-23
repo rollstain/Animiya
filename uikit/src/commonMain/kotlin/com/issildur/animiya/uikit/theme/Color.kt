@@ -24,6 +24,7 @@ internal object AnimiyaPalette {
     val OnSurfaceVariant = Color(0xFFCAC4D0)
     val OnSurfaceMuted = Color(0xFF928E99)
     val Success = Color(0xFF4ADE80)
+    val Warning = Color(0xFFF5A623) // янтарь для статуса «онгоинг N/M»; в токенах нет, добавлен под бейджи
     val Error = Color(0xFFF2564D)
 
     val White = Color(0xFFFFFFFF)

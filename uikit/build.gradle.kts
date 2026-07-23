@@ -26,6 +26,8 @@ kotlin {
             implementation(compose.material3)
             // Понадобится, когда добавим бандл-шрифты Unbounded/Onest (см. Fonts.kt).
             implementation(compose.components.resources)
+            // Постеры/бэкдропы — часть design-системы.
+            implementation(libs.coil.compose)
         }
     }
 }

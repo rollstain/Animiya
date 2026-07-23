@@ -1,7 +1,6 @@
 package com.issildur.animiya.feature.release
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,9 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,15 +21,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import com.issildur.animiya.core.utils.AppError
+import com.issildur.animiya.core.ui.AppErrorContent
 import com.issildur.animiya.data.anime.api.usecase.GetReleaseUseCase
+import com.issildur.animiya.uikit.component.LoadingState
+import com.issildur.animiya.uikit.component.Poster
+import com.issildur.animiya.uikit.theme.AnimiyaSpacing
 import org.koin.compose.koinInject
 
 @Composable
@@ -70,24 +64,9 @@ fun ReleaseDetailsView(
 ) {
     Surface(modifier = modifier.fillMaxSize()) {
         when (state) {
-            ReleaseDetailsContent.Loading -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) { CircularProgressIndicator() }
+            ReleaseDetailsContent.Loading -> LoadingState()
 
-            is ReleaseDetailsContent.Error -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(24.dp),
-                ) {
-                    Text(text = state.error.toReadableMessage(), textAlign = TextAlign.Center)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = onRetry) { Text(text = "Повторить") }
-                }
-            }
+            is ReleaseDetailsContent.Error -> AppErrorContent(error = state.error, onRetry = onRetry)
 
             is ReleaseDetailsContent.Content -> DetailsContent(state)
         }
@@ -97,36 +76,40 @@ fun ReleaseDetailsView(
 @Composable
 private fun DetailsContent(content: ReleaseDetailsContent.Content) {
     LazyColumn(
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(AnimiyaSpacing.md),
+        verticalArrangement = Arrangement.spacedBy(AnimiyaSpacing.sm),
         modifier = Modifier.fillMaxSize(),
     ) {
         item {
             Row {
-                AsyncImage(
-                    model = content.posterUrl,
+                Poster(
+                    url = content.posterUrl,
                     contentDescription = content.title,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(120.dp)
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(12.dp)),
+                    modifier = Modifier.width(120.dp),
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(AnimiyaSpacing.sm))
                 Column {
-                    Text(text = content.title, style = MaterialTheme.typography.titleMedium)
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = content.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    Spacer(modifier = Modifier.height(AnimiyaSpacing.xxs))
                     Text(
                         text = content.subtitle,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (content.genres.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = content.genres, style = MaterialTheme.typography.bodySmall)
+                        Spacer(modifier = Modifier.height(AnimiyaSpacing.xxs))
+                        Text(
+                            text = content.genres,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     }
                     if (content.blockedReason != null) {
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(AnimiyaSpacing.xs))
                         Text(
                             text = "🔒 ${content.blockedReason}",
                             style = MaterialTheme.typography.bodySmall,
@@ -139,7 +122,11 @@ private fun DetailsContent(content: ReleaseDetailsContent.Content) {
 
         if (content.description != null) {
             item {
-                Text(text = content.description, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = content.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
             }
         }
 
@@ -147,6 +134,7 @@ private fun DetailsContent(content: ReleaseDetailsContent.Content) {
             Text(
                 text = "Эпизоды (${content.episodes.size})",
                 style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
 
@@ -158,8 +146,12 @@ private fun DetailsContent(content: ReleaseDetailsContent.Content) {
 
 @Composable
 private fun EpisodeRow(episode: EpisodeUiModel) {
-    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-        Text(text = episode.title, style = MaterialTheme.typography.bodyMedium)
+    Column(modifier = Modifier.fillMaxWidth().padding(vertical = AnimiyaSpacing.xxs)) {
+        Text(
+            text = episode.title,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
         val details = listOfNotNull(
             episode.duration,
             episode.qualities.takeIf { it.isNotEmpty() },
@@ -179,18 +171,6 @@ private fun EpisodeRow(episode: EpisodeUiModel) {
                 color = MaterialTheme.colorScheme.error,
             )
         }
-        HorizontalDivider(modifier = Modifier.padding(top = 8.dp))
+        HorizontalDivider(modifier = Modifier.padding(top = AnimiyaSpacing.xs))
     }
-}
-
-internal fun AppError.toReadableMessage(): String = when (this) {
-    is AppError.NoConnection -> "Нет соединения с интернетом"
-    AppError.Timeout -> "Сервер не ответил вовремя"
-    is AppError.ServerError -> "Сервер недоступен, попробуйте позже"
-    AppError.AllEndpointsUnavailable -> "Все известные адреса недоступны"
-    is AppError.RateLimited -> "Слишком много запросов, подождите немного"
-    AppError.NotFound -> "Релиз не найден"
-    is AppError.ClientError -> "Запрос отклонён сервером"
-    is AppError.ParseError -> "Не удалось обработать ответ сервера"
-    is AppError.Unknown -> "Что-то пошло не так"
 }
