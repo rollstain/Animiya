@@ -34,3 +34,11 @@ iosApp/**/xcuserdata/
 *.keystore
 env.properties
 secrets.properties
+
+# Локальное состояние Claude Code
+.claude/
+
+# Мусор от research-агентов (сырые фетчи), не часть проекта
+/*.html
+/*.htm
+/plex_sitemap.xml
