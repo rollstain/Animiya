@@ -29,6 +29,9 @@ class AnimeRepositoryImpl(
         limit = GetReleaseCatalogUseCase.DEFAULT_PAGE_SIZE,
     )
 
+    override suspend fun getLatest(limit: Int): AppResult<List<Release>> =
+        remote.getLatest(limit = limit)
+
     override suspend fun getRelease(idOrAlias: String): AppResult<ReleaseDetails> =
         remote.getRelease(idOrAlias)
 

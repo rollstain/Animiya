@@ -28,13 +28,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.issildur.animiya.core.ui.AppErrorContent
+import com.issildur.animiya.core.ui.ReleasePosterUi
 import com.issildur.animiya.core.utils.AppError
 import com.issildur.animiya.uikit.component.Badge
 import com.issildur.animiya.uikit.component.BadgeTone
 import com.issildur.animiya.uikit.component.EmptyState
 import com.issildur.animiya.uikit.component.LoadingState
-import com.issildur.animiya.uikit.component.Poster
 import com.issildur.animiya.uikit.component.SecondaryButton
+import com.issildur.animiya.uikit.component.TitlePosterCard
 import com.issildur.animiya.uikit.theme.AnimiyaSpacing
 import kotlinx.coroutines.flow.distinctUntilChanged
 
@@ -49,7 +50,7 @@ fun CatalogView(
     state: CatalogUiState,
     onRetry: () -> Unit,
     onLoadMore: () -> Unit,
-    onReleaseClick: (ReleaseUiModel) -> Unit,
+    onReleaseClick: (ReleasePosterUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(modifier = modifier.fillMaxSize()) {
@@ -74,12 +75,12 @@ fun CatalogView(
 
 @Composable
 private fun ReleaseGrid(
-    releases: List<ReleaseUiModel>,
+    releases: List<ReleasePosterUi>,
     isAppending: Boolean,
     appendError: AppError?,
     onLoadMore: () -> Unit,
     onRetryAppend: () -> Unit,
-    onReleaseClick: (ReleaseUiModel) -> Unit,
+    onReleaseClick: (ReleasePosterUi) -> Unit,
 ) {
     val gridState = rememberLazyGridState()
     PaginationEffect(gridState = gridState, itemCount = releases.size, onLoadMore = onLoadMore)
@@ -135,15 +136,14 @@ private fun PaginationEffect(
 }
 
 @Composable
-private fun ReleaseCard(release: ReleaseUiModel, onClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .clickable(onClick = onClick),
-    ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Poster(url = release.posterUrl, contentDescription = release.title)
+private fun ReleaseCard(release: ReleasePosterUi, onClick: () -> Unit) {
+    TitlePosterCard(
+        posterUrl = release.posterUrl,
+        title = release.title,
+        subtitle = release.subtitle,
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        overlay = {
             if (release.blockedReason != null) {
                 Badge(
                     text = "🔒",
@@ -158,23 +158,6 @@ private fun ReleaseCard(release: ReleaseUiModel, onClick: () -> Unit) {
                     modifier = Modifier.align(Alignment.TopStart).padding(AnimiyaSpacing.xs),
                 )
             }
-        }
-        Spacer(modifier = Modifier.height(AnimiyaSpacing.xs))
-        Text(
-            text = release.title,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurface,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
-        if (release.subtitle.isNotEmpty()) {
-            Text(
-                text = release.subtitle,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-    }
+        },
+    )
 }

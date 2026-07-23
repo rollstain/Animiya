@@ -1,8 +1,7 @@
 package com.issildur.animiya.feature.catalog
 
+import com.issildur.animiya.core.ui.toPosterUi
 import com.issildur.animiya.core.utils.AppResult
-import com.issildur.animiya.data.anime.api.model.Availability
-import com.issildur.animiya.data.anime.api.model.Release
 import com.issildur.animiya.data.anime.api.usecase.GetReleaseCatalogUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +19,8 @@ interface CatalogComponent {
 /**
  * Держатель состояния экрана каталога.
  *
- * View не знает про домен: маппинг [Release] -> [ReleaseUiModel] происходит здесь.
+ * View не знает про домен: маппинг Release -> ReleasePosterUi (общий, из :core_ui)
+ * происходит здесь.
  */
 class DefaultCatalogComponent(
     private val scope: CoroutineScope,
@@ -54,7 +54,7 @@ class DefaultCatalogComponent(
                 is AppResult.Success -> {
                     currentPage = result.value.page
                     hasNext = result.value.hasNext
-                    val appended = result.value.items.map { it.toUiModel() }
+                    val appended = result.value.items.map { it.toPosterUi() }
                     _state.update { previous ->
                         val existing = (previous.content as? CatalogContent.Items)?.releases.orEmpty()
                         previous.copy(
@@ -80,7 +80,7 @@ class DefaultCatalogComponent(
                 is AppResult.Success -> {
                     currentPage = result.value.page
                     hasNext = result.value.hasNext
-                    val items = result.value.items.map { it.toUiModel() }
+                    val items = result.value.items.map { it.toPosterUi() }
                     _state.update {
                         it.copy(
                             content = if (items.isEmpty()) {
@@ -99,21 +99,3 @@ class DefaultCatalogComponent(
         }
     }
 }
-
-private fun Release.toUiModel(): ReleaseUiModel = ReleaseUiModel(
-    id = id,
-    idOrAlias = alias ?: id.raw.toString(),
-    title = title,
-    subtitle = listOfNotNull(
-        year?.toString(),
-        season,
-        type,
-    ).joinToString(separator = " · "),
-    posterUrl = poster.forGrid(),
-    isOngoing = isOngoing,
-    blockedReason = when (availability) {
-        Availability.AVAILABLE -> null
-        Availability.GEO_BLOCKED -> "Недоступно в вашем регионе"
-        Availability.COPYRIGHT_BLOCKED -> "Заблокировано правообладателем"
-    },
-)

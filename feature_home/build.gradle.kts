@@ -7,7 +7,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.issildur.animiya.core.ui"
+        namespace = "com.issildur.animiya.feature.home"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         compilerOptions {
@@ -21,12 +21,18 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.uikit)
             implementation(projects.coreUtils)
+            implementation(projects.coreUi)
+            implementation(projects.uikit)
             implementation(projects.dataAnime.api)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
+            implementation(compose.material3)
+
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
     }
 }

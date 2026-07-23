@@ -9,6 +9,8 @@ interface AnimeRepository {
 
     suspend fun loadCatalogPage(page: Int, forceRefresh: Boolean = false): AppResult<Page<Release>>
 
+    suspend fun getLatest(limit: Int): AppResult<List<Release>>
+
     suspend fun getRelease(idOrAlias: String): AppResult<ReleaseDetails>
 
     suspend fun search(query: String): AppResult<List<Release>>

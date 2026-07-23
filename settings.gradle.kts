@@ -32,6 +32,7 @@ include(":uikit")
 include(":core_ui")
 
 // feature
+include(":feature_home")
 include(":feature_catalog")
 include(":feature_release")
 
