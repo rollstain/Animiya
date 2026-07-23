@@ -1,0 +1,15 @@
+CREATE TABLE catalogPage (
+    page    INTEGER NOT NULL PRIMARY KEY,
+    payload TEXT    NOT NULL,
+    savedAt INTEGER NOT NULL
+);
+
+upsertPage:
+INSERT OR REPLACE INTO catalogPage(page, payload, savedAt)
+VALUES (?, ?, ?);
+
+selectPage:
+SELECT payload, savedAt FROM catalogPage WHERE page = ?;
+
+deleteAll:
+DELETE FROM catalogPage;

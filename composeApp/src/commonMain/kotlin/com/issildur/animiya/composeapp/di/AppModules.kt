@@ -8,6 +8,7 @@ import com.issildur.animiya.core.network.impl.buildImageHttpClient
 import com.issildur.animiya.data.anime.impl.di.ApiHttpClient
 import com.issildur.animiya.data.anime.impl.di.ImageHttpClient
 import com.issildur.animiya.data.anime.impl.di.dataAnimeModule
+import com.issildur.animiya.data.anime.impl.di.platformDatabaseModule
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.logging.Logger
 import org.koin.core.KoinApplication
@@ -54,6 +55,7 @@ expect val platformModule: Module
 fun appModules(isDebug: Boolean): List<Module> = listOf(
     module { single { AppConfig(isDebug = isDebug) } },
     platformModule,
+    platformDatabaseModule(),
     networkModule,
     dataAnimeModule,
 )

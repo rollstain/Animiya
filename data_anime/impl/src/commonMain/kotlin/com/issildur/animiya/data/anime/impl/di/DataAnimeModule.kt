@@ -6,8 +6,11 @@ import com.issildur.animiya.data.anime.api.usecase.GetLatestReleasesUseCase
 import com.issildur.animiya.data.anime.api.usecase.GetReleaseCatalogUseCase
 import com.issildur.animiya.data.anime.api.usecase.GetReleaseUseCase
 import com.issildur.animiya.data.anime.api.usecase.SearchReleasesUseCase
+import com.issildur.animiya.core.network.impl.AnimiyaJson
 import com.issildur.animiya.data.anime.impl.AnilibriaRemoteDataSource
 import com.issildur.animiya.data.anime.impl.AnimeRepositoryImpl
+import com.issildur.animiya.data.anime.impl.cache.AnimeLocalDataSource
+import com.issildur.animiya.data.anime.impl.db.AnimiyaDatabase
 import com.issildur.animiya.data.anime.impl.mapper.ImageUrlResolver
 import com.issildur.animiya.data.anime.impl.mapper.ReleaseMapper
 import io.ktor.client.HttpClient
@@ -32,7 +35,10 @@ val dataAnimeModule = module {
         )
     }
 
-    single<AnimeRepository> { AnimeRepositoryImpl(remote = get()) }
+    single { AnimiyaDatabase(driver = get()) }
+    single { AnimeLocalDataSource(database = get(), json = AnimiyaJson) }
+
+    single<AnimeRepository> { AnimeRepositoryImpl(remote = get(), local = get()) }
 
     factory { GetReleaseCatalogUseCase(repository = get()) }
     factory { GetLatestReleasesUseCase(repository = get()) }

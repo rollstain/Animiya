@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -13,8 +14,6 @@ kotlin {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
     }
-
-    jvm()
 
     iosX64()
     iosArm64()
@@ -32,11 +31,24 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.koin.core)
+
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines)
         }
-        commonTest.dependencies {
-            implementation(kotlin("test"))
-            implementation(libs.ktor.client.mock)
-            implementation(libs.kotlinx.coroutines.test)
+        androidMain.dependencies {
+            implementation(libs.sqldelight.android.driver)
+            implementation(libs.koin.android)
+        }
+        iosMain.dependencies {
+            implementation(libs.sqldelight.native.driver)
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("AnimiyaDatabase") {
+            packageName.set("com.issildur.animiya.data.anime.impl.db")
         }
     }
 }
