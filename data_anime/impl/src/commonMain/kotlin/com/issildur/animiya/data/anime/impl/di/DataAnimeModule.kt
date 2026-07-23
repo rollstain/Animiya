@@ -5,6 +5,7 @@ import com.issildur.animiya.data.anime.api.AnimeRepository
 import com.issildur.animiya.data.anime.api.usecase.GetLatestReleasesUseCase
 import com.issildur.animiya.data.anime.api.usecase.GetReleaseCatalogUseCase
 import com.issildur.animiya.data.anime.api.usecase.GetReleaseUseCase
+import com.issildur.animiya.data.anime.api.usecase.SearchReleasesUseCase
 import com.issildur.animiya.data.anime.impl.AnilibriaRemoteDataSource
 import com.issildur.animiya.data.anime.impl.AnimeRepositoryImpl
 import com.issildur.animiya.data.anime.impl.mapper.ImageUrlResolver
@@ -36,4 +37,5 @@ val dataAnimeModule = module {
     factory { GetReleaseCatalogUseCase(repository = get()) }
     factory { GetLatestReleasesUseCase(repository = get()) }
     factory { GetReleaseUseCase(repository = get()) }
+    factory { SearchReleasesUseCase(repository = get()) }
 }

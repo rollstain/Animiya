@@ -18,6 +18,7 @@ sealed interface CatalogContent {
 @Immutable
 data class CatalogUiState(
     val content: CatalogContent = CatalogContent.Loading,
+    val query: String = "",
     /** Догрузка следующей страницы — отдельно от первичной загрузки. */
     val isAppending: Boolean = false,
     val appendError: AppError? = null,
