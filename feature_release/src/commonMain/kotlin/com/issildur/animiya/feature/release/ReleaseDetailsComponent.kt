@@ -6,6 +6,7 @@ import com.issildur.animiya.core.utils.AppResult
 import com.issildur.animiya.data.anime.api.model.Availability
 import com.issildur.animiya.data.anime.api.model.Episode
 import com.issildur.animiya.data.anime.api.model.ReleaseDetails
+import com.issildur.animiya.data.anime.api.model.TranslationKind
 import com.issildur.animiya.data.anime.api.usecase.GetReleaseUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,10 +36,12 @@ sealed interface ReleaseDetailsContent {
         val backdropUrl: String?,
         val isOngoing: Boolean,
         val blockedReason: String?,
-        /** Студия текущей озвучки (пока одна — AniLibria). */
+        /** Студия текущей озвучки. */
         val dubStudio: String,
-        /** «Русская озвучка · 12 серий · до 1080p». */
+        /** «Озвучка · 12 серий · до 1080p». */
         val dubMeta: String,
+        /** Сколько всего озвучек доступно (для «Сменить», когда их станет несколько). */
+        val translationsCount: Int,
         val description: String?,
         val genres: List<String>,
         val episodes: List<EpisodeUiModel>,
@@ -81,11 +84,13 @@ class DefaultReleaseDetailsComponent(
 
 private fun ReleaseDetails.toContent(): ReleaseDetailsContent.Content {
     val r = release
-    val maxQuality = episodes.flatMap { it.streams }.maxOfOrNull { it.quality.height }
+    val translation = primaryTranslation
+    val episodes = translation?.episodes.orEmpty()
+
     val dubMeta = listOfNotNull(
-        "Русская озвучка",
+        translation?.kind.toLabel(),
         episodes.size.takeIf { it > 0 }?.let { "$it серий" },
-        maxQuality?.let { "до ${it}p" },
+        translation?.maxQualityHeight?.let { "до ${it}p" },
     ).joinToString(" · ")
 
     return ReleaseDetailsContent.Content(
@@ -106,13 +111,22 @@ private fun ReleaseDetails.toContent(): ReleaseDetailsContent.Content {
             Availability.GEO_BLOCKED -> "Недоступно в вашем регионе"
             Availability.AVAILABLE -> null
         },
-        dubStudio = "AniLibria",
+        dubStudio = translation?.studio ?: "Озвучка",
         dubMeta = dubMeta,
+        translationsCount = translations.size,
         description = r.description,
         genres = r.genres.map { it.name },
         episodes = episodes.map { it.toUiModel() },
-        hasAnyVideo = episodes.any { it.hasVideo },
+        hasAnyVideo = episodes.any { it.isPlayable },
     )
+}
+
+private fun TranslationKind?.toLabel(): String = when (this) {
+    TranslationKind.DUB -> "Дубляж"
+    TranslationKind.MULTI_VOICE -> "Многоголосая озвучка"
+    TranslationKind.VOICE -> "Озвучка"
+    TranslationKind.SUBTITLES -> "Субтитры"
+    TranslationKind.UNKNOWN, null -> "Озвучка"
 }
 
 private fun Episode.toUiModel(): EpisodeUiModel = EpisodeUiModel(
@@ -128,11 +142,11 @@ private fun Episode.toUiModel(): EpisodeUiModel = EpisodeUiModel(
     },
     meta = listOfNotNull(
         durationSec?.let { "${it / 60} мин" },
-        streams.firstOrNull()?.let { "до ${streams.maxOf { s -> s.quality.height }}p" },
+        maxQualityHeight?.let { "до ${it}p" },
         opening?.let { "опенинг ${it.startSec}–${it.stopSec}с" },
     ).joinToString(" · "),
     thumbnailUrl = preview.best(),
-    hasVideo = hasVideo,
+    hasVideo = isPlayable,
 )
 
 /** Простая группировка тысяч пробелом: 24189 → «24 189». */

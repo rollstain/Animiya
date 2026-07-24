@@ -88,8 +88,16 @@ data class Release(
     val isBlocked: Boolean get() = availability != Availability.AVAILABLE
 }
 
-/** Релиз вместе с эпизодами — приходит только из детального запроса. */
+/**
+ * Релиз с озвучками — из детального запроса.
+ *
+ * Список переводов: у AniLibria пока один (своя озвучка), но структура готова
+ * к нескольким источникам (AnimeVost, Sovetromantica) — их добавит агрегация
+ * на репозитории/бэкенде без изменения модели.
+ */
 data class ReleaseDetails(
     val release: Release,
-    val episodes: List<Episode>,
-)
+    val translations: List<Translation>,
+) {
+    val primaryTranslation: Translation? get() = translations.firstOrNull()
+}

@@ -12,11 +12,27 @@ enum class VideoQuality(val height: Int) {
     P1080(1080),
 }
 
-/** Готовая ссылка на HLS-манифест. В отличие от постеров, приходит абсолютной. */
-data class HlsStream(
+/** Контейнер прямого потока. Нативный плеер (Media3/AVPlayer) играет оба по URL. */
+enum class StreamContainer { HLS, MP4 }
+
+/** Прямая ссылка на видеопоток конкретного качества. */
+data class Stream(
     val quality: VideoQuality,
     val url: String,
+    val container: StreamContainer,
 )
+
+/**
+ * Способ воспроизведения эпизода.
+ *
+ * [Direct] — прямые потоки (AniLibria HLS, AnimeVost mp4) → наш нативный плеер.
+ * [Embed]  — страница-плеер источника (Sovetromantica) → WebView, наши фичи там
+ *            не работают. Разделение по типам — спина мультиисточниковой модели.
+ */
+sealed interface Playback {
+    data class Direct(val streams: List<Stream>) : Playback
+    data class Embed(val url: String) : Playback
+}
 
 /** Отрезок для пропуска (опенинг/эндинг), в секундах от начала эпизода. */
 data class Timecode(
@@ -28,22 +44,22 @@ data class Timecode(
 
 data class Episode(
     val id: EpisodeId,
-    /**
-     * Номер серии. Дробный намеренно: у спешлов и рекапов встречаются
-     * номера вида 7.5.
-     */
+    /** Номер серии. Дробный намеренно: у спешлов встречаются номера вида 7.5. */
     val ordinal: Double?,
     val title: String?,
     val durationSec: Int?,
     val preview: ImageSet,
     val opening: Timecode?,
     val ending: Timecode?,
-    /** Только доступные качества, отсортированы по убыванию. Может быть пустым. */
-    val streams: List<HlsStream>,
+    val playback: Playback?,
 ) {
-    val hasVideo: Boolean get() = streams.isNotEmpty()
+    val isPlayable: Boolean get() = playback != null
 
-    fun bestStream(): HlsStream? = streams.firstOrNull()
+    fun directStreams(): List<Stream> = (playback as? Playback.Direct)?.streams.orEmpty()
 
-    fun streamFor(quality: VideoQuality): HlsStream? = streams.firstOrNull { it.quality == quality }
+    fun bestStream(): Stream? = directStreams().firstOrNull()
+
+    fun streamFor(quality: VideoQuality): Stream? = directStreams().firstOrNull { it.quality == quality }
+
+    val maxQualityHeight: Int? get() = directStreams().maxOfOrNull { it.quality.height }
 }
